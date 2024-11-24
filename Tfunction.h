@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -8,173 +10,100 @@
 #include <functional>
 #include <any>
 
-class TFunction {
+class TFunction : public std::enable_shared_from_this<TFunction>{
 public:
     virtual ~TFunction() = default;
 
-    virtual double operator()(double x) const = 0;
+    virtual long double operator()(long double x) const = 0;
 
-    virtual double GetDeriv(double x) const = 0;
+    virtual long double GetDeriv(long double x) const = 0;
 
     virtual std::string ToString() const = 0;
 
-    TFunction& operator+(const TFunction& other);
-    TFunction& operator-(const TFunction& other);
-    TFunction& operator*(const TFunction& other);
-    TFunction& operator/(const TFunction& other);
+    virtual std::shared_ptr<TFunction> operator+(const TFunction& other) const;
+    virtual std::shared_ptr<TFunction> operator-(const TFunction& other) const;
+    virtual std::shared_ptr<TFunction> operator*(const TFunction& other) const;
+    virtual std::shared_ptr<TFunction> operator/(const TFunction& other) const;
 };
 
 class IdentityFunction : public TFunction {
 public:
-    double operator()(double x) const override {
-        return x;
-    }
+    long double operator()(long double x) const override;
 
-    double GetDeriv(double x) const override {
-        return 1;
-    }
+    long double GetDeriv(long double x) const override;
 
-    std::string ToString() const override {
-        return "x";
-    }
+    std::string ToString() const override;
 };
 
 class ConstantFunction : public TFunction {
 private:
-    double value;
+    long double value_;
 
 public:
-    explicit ConstantFunction(double v) : value(v) {}
+    explicit ConstantFunction(long double v);
 
-    double operator()(double x) const override {
-        return value;
-    }
+    long double operator()(long double x) const override;
 
-    double GetDeriv(double x) const override {
-        return 0;
-    }
+    long double GetDeriv(long double x) const override;
 
-    std::string ToString() const override {
-        return std::to_string(value);
-    }
+    std::string ToString() const override;
 };
 
 class PowerFunction : public TFunction {
 private:
-    double exponent;
+    long double exponent_;
 
 public:
-    explicit PowerFunction(double exp) : exponent(exp) {}
+    explicit PowerFunction(long double exp);
 
-    double operator()(double x) const override {
-        return std::pow(x, exponent);
-    }
+    long double operator()(long double x) const override;
 
-    double GetDeriv(double x) const override {
-        return exponent * std::pow(x, exponent - 1);
-    }
+    long double GetDeriv(long double x) const override;
 
-    std::string ToString() const override {
-        return "x^" + std::to_string(exponent);
-    }
+    std::string ToString() const override;
 };
 
 class ExpFunction : public TFunction {
 public:
-    double operator()(double x) const override {
-        return std::exp(x);
-    }
+    long double operator()(long double x) const override;
 
-    double GetDeriv(double x) const override {
-        return std::exp(x);
-    }
+    long double GetDeriv(long double x) const override;
 
-    std::string ToString() const override {
-        return "e^x";
-    }
+    std::string ToString() const override;
 };
 
 class PolynomialFunction : public TFunction {
 private:
-    std::vector<double> coeff_;
+    std::vector<long double> coeff_;
 
 public:
-    explicit PolynomialFunction(const std::vector<double>& coeffs) : coeff_(coeffs) {}
+    explicit PolynomialFunction(const std::vector<long double>& coeffs);
 
-    double operator()(double x) const override {
-        double result = 0;
-        double power = 1;
-        for (double coeff : coeff_) {
-            result += coeff * power;
-            power *= x;
-        }
-        return result;
-    }
+    long double operator()(long double x) const override;
 
-    double GetDeriv(double x) const override {
-        double result = 0;
-        double power = 1;
-        for (size_t i = 1; i < coeff_.size(); ++i) {
-            result += i * coeff_[i] * power;
-            power *= x;
-        }
-        return result;
-    }
+    long double GetDeriv(long double x) const override;
 
-    std::string ToString() const override {
-        std::ostringstream oss;
-        for (size_t i = 0; i < coeff_.size(); ++i) {
-            if (i > 0) oss << " + ";
-            oss << coeff_[i];
-            if (i > 0) oss << "*x^" << i;
-        }
-        return oss.str();
-    }
+    std::string ToString() const override;
+};
+
+class Function : public TFunction {
+private:
+    std::shared_ptr<const TFunction> f_;
+    std::shared_ptr<const TFunction> s_;
+    char op_;
+
+public:
+    explicit Function(std::shared_ptr<const TFunction> f, std::shared_ptr<const TFunction> s, char op);
+
+    long double operator()(long double x) const override;
+
+    long double GetDeriv(long double x) const override;
+
+    std::string ToString() const override;
 };
 
 class FunctionFactory {
 public:
-    /*std::shared_ptr<TFunction> Create(const std::string& type) {
-        if (type == "ident") {
-            return std::make_shared<IdentityFunction>();
-        } else if (type == "exp") {
-            return std::make_shared<ExpFunction>();
-        } else {
-            throw std::logic_error("Unknown function type");
-        }
-    }
-
-    std::shared_ptr<TFunction> Create(const std::string& type, const double &param) {
-        if (type == "const") {
-            return std::make_shared<ConstantFunction>(param);
-        } else if (type == "power") {
-            return std::make_shared<PowerFunction>(param);
-        } else {
-            throw std::logic_error("Unknown function type");
-        }
-    }
-
-    std::shared_ptr<TFunction> Create(const std::string& type, const std::vector<double> &param) {
-        if (type == "polynomial") {
-            return std::make_shared<PolynomialFunction>(param);
-        } else {
-            throw std::logic_error("Unknown function type");
-        }
-    }*/
-    std::shared_ptr<TFunction> Create(const std::string& type, const std::any& param = {}) {
-        if (type == "ident") {
-            return std::make_shared<IdentityFunction>();
-        } else if (type == "const") {
-            return std::make_shared<ConstantFunction>(std::any_cast<double>(param));
-        } else if (type == "power") {
-            return std::make_shared<PowerFunction>(std::any_cast<double>(param));
-        } else if (type == "exp") {
-            return std::make_shared<ExpFunction>();
-        } else if (type == "polynomial") {
-            return std::make_shared<PolynomialFunction>(std::any_cast<std::vector<double>>(param));
-        } else {
-            throw std::logic_error("Unknown function type");
-        }
-    }
+    std::shared_ptr<TFunction> Create(const std::string& type, const std::any& param = {});
 };
 
