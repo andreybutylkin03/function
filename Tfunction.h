@@ -14,9 +14,9 @@ class TFunction : public std::enable_shared_from_this<TFunction>{
 public:
     virtual ~TFunction() = default;
 
-    virtual long double operator()(long double x) const = 0;
+    virtual double operator()(double x) const = 0;
 
-    virtual long double GetDeriv(long double x) const = 0;
+    virtual double GetDeriv(double x) const = 0;
 
     virtual std::string ToString() const = 0;
 
@@ -28,60 +28,60 @@ public:
 
 class IdentityFunction : public TFunction {
 public:
-    long double operator()(long double x) const override;
+    double operator()(double x) const override;
 
-    long double GetDeriv(long double x) const override;
+    double GetDeriv(double x) const override;
 
     std::string ToString() const override;
 };
 
 class ConstantFunction : public TFunction {
 private:
-    long double value_;
+    double value_;
 
 public:
-    explicit ConstantFunction(long double v);
+    explicit ConstantFunction(double v);
 
-    long double operator()(long double x) const override;
+    double operator()(double x) const override;
 
-    long double GetDeriv(long double x) const override;
+    double GetDeriv(double x) const override;
 
     std::string ToString() const override;
 };
 
 class PowerFunction : public TFunction {
 private:
-    long double exponent_;
+    double exponent_;
 
 public:
-    explicit PowerFunction(long double exp);
+    explicit PowerFunction(double exp);
 
-    long double operator()(long double x) const override;
+    double operator()(double x) const override;
 
-    long double GetDeriv(long double x) const override;
+    double GetDeriv(double x) const override;
 
     std::string ToString() const override;
 };
 
 class ExpFunction : public TFunction {
 public:
-    long double operator()(long double x) const override;
+    double operator()(double x) const override;
 
-    long double GetDeriv(long double x) const override;
+    double GetDeriv(double x) const override;
 
     std::string ToString() const override;
 };
 
 class PolynomialFunction : public TFunction {
 private:
-    std::vector<long double> coeff_;
+    std::vector<double> coeff_;
 
 public:
-    explicit PolynomialFunction(const std::vector<long double>& coeffs);
+    explicit PolynomialFunction(const std::vector<double>& coeffs);
 
-    long double operator()(long double x) const override;
+    double operator()(double x) const override;
 
-    long double GetDeriv(long double x) const override;
+    double GetDeriv(double x) const override;
 
     std::string ToString() const override;
 };
@@ -95,9 +95,9 @@ private:
 public:
     explicit Function(std::shared_ptr<const TFunction> f, std::shared_ptr<const TFunction> s, char op);
 
-    long double operator()(long double x) const override;
+    double operator()(double x) const override;
 
-    long double GetDeriv(long double x) const override;
+    double GetDeriv(double x) const override;
 
     std::string ToString() const override;
 };
