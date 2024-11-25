@@ -9,6 +9,9 @@
 #include <sstream>
 #include <functional>
 #include <any>
+#include <random>
+#include <cfloat>
+#include <iomanip>
 
 class TFunction : public std::enable_shared_from_this<TFunction>{
 public:
@@ -24,6 +27,8 @@ public:
     virtual std::shared_ptr<TFunction> operator-(const TFunction& other) const;
     virtual std::shared_ptr<TFunction> operator*(const TFunction& other) const;
     virtual std::shared_ptr<TFunction> operator/(const TFunction& other) const;
+
+    virtual long double GradientDescent(int i = 100) const;
 };
 
 class IdentityFunction : public TFunction {

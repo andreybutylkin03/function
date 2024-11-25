@@ -1,6 +1,6 @@
 #include "Tfunction.h"
 
-const long double eps = 1e-6;
+const long double eps = 1e-12;
 
 std::shared_ptr<TFunction> TFunction::operator+(const TFunction& other) const {
     return std::make_shared<Function>(shared_from_this(), other.shared_from_this(), '+');
@@ -16,6 +16,32 @@ std::shared_ptr<TFunction> TFunction::operator*(const TFunction& other) const {
 
 std::shared_ptr<TFunction> TFunction::operator/(const TFunction& other) const {
     return std::make_shared<Function>(shared_from_this(), other.shared_from_this(), '/');
+}
+
+long double TFunction::GradientDescent(int i) const {
+    long double ans = 0, alpha = 1.0;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<long double> dis(-1000.0, 1000.0); 
+
+    ans = dis(gen);
+
+    for (int j = 0; j < i; ++j) {
+        std::cout << ans << std::endl;
+
+        long double val = (*this)(ans);
+        if (std::abs(val) < eps) 
+            break;
+
+        if (val > 0) {
+            ans = ans - alpha * this->GetDeriv(ans);
+        } else {
+            ans = ans + alpha * this->GetDeriv(ans);
+        }
+    }
+
+    return ans;
 }
 
 long double IdentityFunction::operator()(long double x) const {
