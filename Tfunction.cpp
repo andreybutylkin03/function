@@ -21,6 +21,7 @@ std::shared_ptr<TFunction> TFunction::operator/(const TFunction& other) const {
 long double TFunction::GradientDescent(int i) const {
     long double ans = 0, alpha = 1.0;
 
+    std::srand(time(NULL));
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<long double> dis(-1000.0, 1000.0); 
@@ -28,9 +29,17 @@ long double TFunction::GradientDescent(int i) const {
     ans = dis(gen);
 
     for (int j = 0; j < i; ++j) {
-        std::cout << ans << std::endl;
-
         long double val = (*this)(ans);
+        alpha = (this->GetDeriv(ans + eps) - this->GetDeriv(ans)) / eps;
+
+        std::cout << ans << " " << val << " " << this->GetDeriv(ans) << " " << alpha << std::endl;
+
+        alpha = std::abs(alpha);
+        if (alpha < 1e-6)
+            alpha = 1 / (alpha + std::log(std::abs(this->GetDeriv(ans))));
+        else 
+            alpha = 1 / alpha;
+
         if (std::abs(val) < eps) 
             break;
 
