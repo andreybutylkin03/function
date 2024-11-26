@@ -9,7 +9,7 @@ int main() {
     long double valf = f->GradientDescent();
     long double valg = g->GradientDescent(1000);
 
-    auto j = std::vector<int>{1, 2, 3} + *f;
+    //auto j = std::vector<int>{1, 2, 3} + *f;
 
     std::cout << f->ToString() << " for x = 10 is " << (*f)(10) << " " << f->GetDeriv(10) << std::endl;
     printf("%.8Lf %.8Lf\n", valf, (*f)(valf));

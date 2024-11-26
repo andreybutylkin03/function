@@ -28,22 +28,22 @@ public:
     std::shared_ptr<TFunction> operator*(const TFunction& other) const;
     std::shared_ptr<TFunction> operator/(const TFunction& other) const;
 
-    template <typename T>
+    template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
     std::shared_ptr<TFunction> operator+(const T& other) const {
         throw std::logic_error("Invalid operand type for TFunction arithmetic");
     }
 
-    template <typename T>
+    template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
     std::shared_ptr<TFunction> operator-(const T& other) const {
         throw std::logic_error("Invalid operand type for TFunction arithmetic");
     }
 
-    template <typename T>
+    template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
     std::shared_ptr<TFunction> operator*(const T& other) const {
         throw std::logic_error("Invalid operand type for TFunction arithmetic");
     }
 
-    template <typename T>
+    template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
     std::shared_ptr<TFunction> operator/(const T& other) const {
         throw std::logic_error("Invalid operand type for TFunction arithmetic");
     }
@@ -56,7 +56,7 @@ T operator+(const T (&lhs)[N], const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
 
-template <typename T>
+template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
 T operator+(const T& lhs, const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
@@ -66,7 +66,7 @@ T operator-(const T (&lhs)[N], const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
 
-template <typename T>
+template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
 T operator-(const T& lhs, const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
@@ -76,7 +76,7 @@ T operator*(const T (&lhs)[N], const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
 
-template <typename T>
+template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
 T operator*(const T& lhs, const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
@@ -86,7 +86,7 @@ T operator/(const T (&lhs)[N], const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
 
-template <typename T>
+template <typename T, typename = std::enable_if_t<!std::is_base_of_v<TFunction, T>>>
 T operator/(const T& lhs, const TFunction& rhs) {
     throw std::logic_error("Invalid operand type for TFunction arithmetic");
 }
