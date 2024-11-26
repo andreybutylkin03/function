@@ -18,6 +18,7 @@ std::shared_ptr<TFunction> TFunction::operator/(const TFunction& other) const {
     return std::make_shared<Function>(shared_from_this(), other.shared_from_this(), '/');
 }
 
+
 long double TFunction::GradientDescent(int i) const {
     long double ans = 0, alpha = 1.0;
 
@@ -32,13 +33,15 @@ long double TFunction::GradientDescent(int i) const {
         long double val = (*this)(ans);
         alpha = (this->GetDeriv(ans + eps) - this->GetDeriv(ans)) / eps;
 
-        std::cout << ans << " " << val << " " << this->GetDeriv(ans) << " " << alpha << std::endl;
+        //std::cout << ans << " " << val << " " << this->GetDeriv(ans) << " " << alpha << std::endl;
 
         alpha = std::abs(alpha);
         if (alpha < 1e-6)
             alpha = 1 / (alpha + std::log(std::abs(this->GetDeriv(ans))));
         else 
             alpha = 1 / alpha;
+
+        alpha /= std::log(j + 2);
 
         if (std::abs(val) < eps) 
             break;
@@ -64,6 +67,7 @@ long double IdentityFunction::GetDeriv(long double x) const {
 std::string IdentityFunction::ToString() const {
     return "x";
 }
+
 
 ConstantFunction::ConstantFunction(long double v) {
     value_ = v;

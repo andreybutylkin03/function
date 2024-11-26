@@ -23,13 +23,73 @@ public:
 
     virtual std::string ToString() const = 0;
 
-    virtual std::shared_ptr<TFunction> operator+(const TFunction& other) const;
-    virtual std::shared_ptr<TFunction> operator-(const TFunction& other) const;
-    virtual std::shared_ptr<TFunction> operator*(const TFunction& other) const;
-    virtual std::shared_ptr<TFunction> operator/(const TFunction& other) const;
+    std::shared_ptr<TFunction> operator+(const TFunction& other) const;
+    std::shared_ptr<TFunction> operator-(const TFunction& other) const;
+    std::shared_ptr<TFunction> operator*(const TFunction& other) const;
+    std::shared_ptr<TFunction> operator/(const TFunction& other) const;
+
+    template <typename T>
+    std::shared_ptr<TFunction> operator+(const T& other) const {
+        throw std::logic_error("Invalid operand type for TFunction arithmetic");
+    }
+
+    template <typename T>
+    std::shared_ptr<TFunction> operator-(const T& other) const {
+        throw std::logic_error("Invalid operand type for TFunction arithmetic");
+    }
+
+    template <typename T>
+    std::shared_ptr<TFunction> operator*(const T& other) const {
+        throw std::logic_error("Invalid operand type for TFunction arithmetic");
+    }
+
+    template <typename T>
+    std::shared_ptr<TFunction> operator/(const T& other) const {
+        throw std::logic_error("Invalid operand type for TFunction arithmetic");
+    }
 
     virtual long double GradientDescent(int i = 100) const;
 };
+
+template <typename T, size_t N>
+T operator+(const T (&lhs)[N], const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T>
+T operator+(const T& lhs, const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T, size_t N>
+T operator-(const T (&lhs)[N], const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T>
+T operator-(const T& lhs, const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T, size_t N>
+T operator*(const T (&lhs)[N], const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T>
+T operator*(const T& lhs, const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T, size_t N>
+T operator/(const T (&lhs)[N], const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
+
+template <typename T>
+T operator/(const T& lhs, const TFunction& rhs) {
+    throw std::logic_error("Invalid operand type for TFunction arithmetic");
+}
 
 class IdentityFunction : public TFunction {
 public:
